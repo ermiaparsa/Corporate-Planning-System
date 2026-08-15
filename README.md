@@ -279,43 +279,6 @@ plans 1 ── * plan_items * ── 1 products
 
 ---
 
-## Features
-
-- **Resource Allocation Modeling:** Efficiently distribute limited firm resources based on operational constraints.
-- **Production Simulation:** Simulate business outcomes based on variable input conditions.
-- **Modular Architecture:** Built with modern C++ principles, allowing for easy expansion of logic and data models.
-- **Optimization Ready:** Architected to support advanced mathematical algorithms and heuristic approaches.
-
----
-
-## Roadmap
-
-- Initial project structure setup
-- Implement core planning models from the reference textbook
-- Develop testing scenarios for production constraints
-- Integrate advanced optimization techniques
-- Explore AI/ML agents for automated decision support
-
----
-
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
-### Prerequisites
-
-- A C++ compiler (e.g., GCC, Clang, or MSVC)
-- CMake (version 3.10 or higher)
-
-### Build
-
-```bash
-cmake -S . -B build
-cmake --build build
-```
-
----
-
 ## Contributing
 
 This is an academic research project. Suggestions for improving the planning model, optimization methods, and simulation features are welcome. Please open an issue before submitting a pull request.
