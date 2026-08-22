@@ -20,10 +20,19 @@ endif()
 add_executable(corporate_planning
     src/main.cpp
     src/api/Cli.cpp
+    src/core/BalanceSheet.cpp
+    src/core/IncomeStatement.cpp
+    src/core/FinancialRatios.cpp
+    src/core/ProductionLineInfo.cpp
+    src/core/PersonnelInfo.cpp
+    src/core/OtherInfo.cpp
+    src/core/ManufacturingCompany.cpp
+    src/core/User.cpp
+    src/core/Equation.cpp
 )
 
 target_include_directories(corporate_planning
-    PRIVATE
+    PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
