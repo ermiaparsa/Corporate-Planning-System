@@ -21,6 +21,8 @@ add_executable(corporate_planning
     src/main.cpp
     src/api/Cli.cpp
     src/core/BalanceSheet.cpp
+    src/core/Assets.cpp
+    src/core/Liabilities.cpp
     src/core/IncomeStatement.cpp
     src/core/FinancialRatios.cpp
     src/core/ProductionLineInfo.cpp
