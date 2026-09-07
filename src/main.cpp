@@ -1,7 +1,10 @@
 #include <iostream>
+#include <iomanip>
 #include "corporate_planning/core/BalanceSheet.hpp"
 #include "corporate_planning/core/IncomeStatement.hpp"  
 #include "corporate_planning/core/FinancialRatios.hpp"  
+#include "corporate_planning/core/ProductionLineInfo.hpp"
+
 
 
 using namespace std;
@@ -122,6 +125,63 @@ int main() {
     cout << "8. Total Asset Turnover: " << ratios.calculateTotalAssetTurnover(balanceSheet, incomeStatement) << "\n";
     cout << "9. Return on Assets (ROA): " << ratios.calculateReturnOnAssets(balanceSheet, incomeStatement) << "\n";
 
+
+    //--- ProductionLineInfo Test ---
+    corporate_planning::core::ProductionLineInfo productionLine;
+
+    // ۱. تعریف متغیرهای دیگر (Other Variables)
+    // (شامل ۳ زیربخش: دستمزد کارگر، قیمت خرید مواد اولیه، استهلاک سرمایه)
+    corporate_planning::core::OtherVariables otherVars;
+    otherVars.workerWageAmount = 1500.0;
+    otherVars.rawMaterialPurchasePrice = 25.0;
+    otherVars.capitalDepreciationAmount = 5000.0;
+    productionLine.setOtherVariables(otherVars);
+
+    // ۲. پارامترهای عملیاتی خط تولید
+    productionLine.setWorkerCount(20);                 // تعداد کارگر
+    productionLine.setProductionAmount(1000.0);     // میزان تولید (واحد)
+    productionLine.setSalesAmount(950.0);           // میزان فروش (واحد)
+    productionLine.setSalePrice(85.0);              // قیمت فروش هر واحد
+    productionLine.setMachinery(250000.0);          // ارزش ماشین‌آلات
+    productionLine.setDepreciationAmount(7500.0);    // میزان استهلاک
+
+    // ۳. محاسبه و تنظیم هزینه‌ها
+    productionLine.setLaborCost(productionLine.calculateLaborCostFromRate());          // دستمزد
+    productionLine.setRawMaterialsCost(productionLine.calculateRawMaterialsCostFromRate()); // مواد اولیه
+    productionLine.setVariableCosts(productionLine.getRawMaterialsCost() + 5000.0);  // متغیر = مواد + سربار متغیر
+    productionLine.setFixedCosts(productionLine.getLaborCost() + productionLine.getDepreciationAmount() + 4500.0); // ثابت = دستمزد + استهلاک + اجاره
+    productionLine.setTotalCosts(productionLine.calculateTotalCosts());
+
+    cout << "--- ProductionLineInfo ---\n";
+
+    cout << "Total costs: "
+         << productionLine.calculateTotalCosts()
+         << '\n';
+
+    cout << "Revenue: "
+         << productionLine.calculateRevenue()
+         << '\n';
+
+    cout << "Unit cost: "
+         << productionLine.calculateUnitCost()
+         << '\n';
+
+    cout << "Unit profit: "
+         << productionLine.calculateUnitProfit()
+         << '\n';
+
+    cout << "Capacity utilization: "
+         << productionLine.calculateCapacityUtilization()
+         << '%'
+         << '\n';
+
+    cout << "Labor cost (from rate): "
+         << productionLine.calculateLaborCostFromRate()
+         << '\n';
+
+    cout << "Raw materials cost (from rate): "
+         << productionLine.calculateRawMaterialsCostFromRate()
+         << '\n';
 
 return 0;
 }
