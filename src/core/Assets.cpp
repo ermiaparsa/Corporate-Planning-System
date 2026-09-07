@@ -31,7 +31,7 @@ return rawMaterials
 + saleableWaste;
 }
 
-double Assets::calculateTangibleAssetsTotal() const {
+double Assets::calculateFixedAssetsTotal() const {
 return land
 + buildings
 + machinery
@@ -45,7 +45,7 @@ return cashOnHand
 + cashInBank
 + accountsReceivable
 + calculateInventoryTotal()
-+ calculateTangibleAssetsTotal()
++ calculateFixedAssetsTotal()
 + longTermInvestments
 + externalInvestments;
 }

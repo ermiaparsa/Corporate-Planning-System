@@ -7,7 +7,7 @@ class Assets {
 public:
     Assets();
     double calculateInventoryTotal() const;
-    double calculateTangibleAssetsTotal() const;
+    double calculateFixedAssetsTotal() const;
     double calculateTotal() const;
 
     void setCashOnHand(double value);
