@@ -7,6 +7,7 @@ class Liabilities {
 public:
     Liabilities();
 
+    double calculateCurrentLiabilities() const;
     double calculateTotal() const;
 
     void setBankOverdraft(double value);

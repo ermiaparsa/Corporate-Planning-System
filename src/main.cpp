@@ -1,6 +1,8 @@
 #include <iostream>
 #include "corporate_planning/core/BalanceSheet.hpp"
-#include "corporate_planning/core/IncomeStatement.hpp"
+#include "corporate_planning/core/IncomeStatement.hpp"  
+#include "corporate_planning/core/FinancialRatios.hpp"  
+
 
 using namespace std;
 
@@ -11,11 +13,11 @@ namespace corporate_planning::api {
 int main() {
     corporate_planning::api::runCli();
 
-    cout <<"-------------"<<endl<<"Corporate Planning - Firm Planning Model\n";
+    cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl<<"Corporate Planning - Firm Planning Model\n";
     cout << "Version 1.0.0\n";
-    cout << "Corporate Planning started successfully." << endl<<"-------------"<< endl;
+    cout << "Corporate Planning started successfully." <<endl;
 
-    //testBalanceSheet
+    //--- BalanceSheet Test ---
     corporate_planning::core::BalanceSheet balanceSheet;
 
     balanceSheet.getAssets().setCashOnHand(10000.0);
@@ -25,15 +27,15 @@ int main() {
     balanceSheet.getLiabilities().setAccountsPayable(8000.0);
     balanceSheet.getLiabilities().setLongTermLoans(20000.0);
 
+    cout << "--- BalanceSheet ---\n";
     cout << "Total assets: "
     << balanceSheet.calculateTotalAssets()
     << endl;
 
     cout << "Total liabilities: "
-    << balanceSheet.calculateTotalLiabilities()
-    << endl<<"-------------"<<endl;
+    << balanceSheet.calculateTotalLiabilities()<< endl;
     
-    //testIncomeStatement
+    //--- IncomeStatement Test ---
      corporate_planning::core::IncomeStatement incomeStatement;
 
     // ۱. فروش
@@ -68,6 +70,7 @@ int main() {
     incomeStatement.setInvestmentImpairmentLoss(4000.0);
     incomeStatement.setMiscellaneousExpenses(2000.0);
 
+    cout << "--- IncomeStatement ---\n";
     cout << "Sales: "
          << incomeStatement.getSales()
          << '\n';
@@ -103,6 +106,22 @@ int main() {
     cout << "Pre-tax profit: "
          << incomeStatement.calculatePreTaxProfit()
          << '\n';
+
+    
+    // --- Financial Ratios Test ---
+    corporate_planning::core::FinancialRatios ratios;
+
+    cout << "--- Financial Ratios ---\n";
+    cout << "1. Cash Ratio: " << ratios.calculateCashRatio(balanceSheet) << "\n";
+    cout << "2. Current Ratio: " << ratios.calculateCurrentRatio(balanceSheet) << "\n";
+    cout << "3. Quick Ratio: " << ratios.calculateQuickRatio(balanceSheet) << "\n";
+    cout << "4. Debt Ratio: " << ratios.calculateDebtRatio(balanceSheet) << "\n";
+    cout << "5. Inventory Turnover: " << ratios.calculateInventoryTurnover(balanceSheet, incomeStatement) << "\n";
+    cout << "6. Profit Margin: " << ratios.calculateProfitMargin(incomeStatement) << "\n";
+    cout << "7. Fixed Asset Turnover: " << ratios.calculateFixedAssetTurnover(balanceSheet, incomeStatement) << "\n";
+    cout << "8. Total Asset Turnover: " << ratios.calculateTotalAssetTurnover(balanceSheet, incomeStatement) << "\n";
+    cout << "9. Return on Assets (ROA): " << ratios.calculateReturnOnAssets(balanceSheet, incomeStatement) << "\n";
+
 
 return 0;
 }

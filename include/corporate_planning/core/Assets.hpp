@@ -8,6 +8,7 @@ public:
     Assets();
     double calculateInventoryTotal() const;
     double calculateFixedAssetsTotal() const;
+    double calculateCurrentAssets() const;
     double calculateTotal() const;
 
     void setCashOnHand(double value);

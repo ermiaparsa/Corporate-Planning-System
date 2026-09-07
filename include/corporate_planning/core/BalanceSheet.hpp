@@ -15,7 +15,10 @@ class BalanceSheet {
         double calculateEquity() const;
 
         Assets& getAssets();
+        const Assets& getAssets() const;
+
         Liabilities& getLiabilities();
+        const Liabilities& getLiabilities() const;
 
         void setNetWorth(double value);
         double getNetWorth() const;

@@ -11,6 +11,10 @@ Liabilities::Liabilities()
       longTermLoans(0.0) {
 }
 
+double Liabilities::calculateCurrentLiabilities() const {
+    return bankOverdraft + accountsPayable + shortTermLoans;
+}
+
 double Liabilities::calculateTotal() const {
     return bankOverdraft
          + accountsPayable

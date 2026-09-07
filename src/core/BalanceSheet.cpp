@@ -27,8 +27,16 @@ Assets& BalanceSheet::getAssets() {
 return assets;
 }
 
+const Assets& BalanceSheet::getAssets() const {
+    return assets;
+}
+
 Liabilities& BalanceSheet::getLiabilities() {
 return liabilities;
+}
+
+const Liabilities& BalanceSheet::getLiabilities() const {
+    return liabilities;
 }
 
 void BalanceSheet::setNetWorth(double value) {

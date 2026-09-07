@@ -23,6 +23,10 @@ longTermInvestments(0.0),
 externalInvestments(0.0) {
 }
 
+double Assets::calculateCurrentAssets() const {
+    return cashOnHand + cashInBank + accountsReceivable + calculateInventoryTotal();
+}
+
 double Assets::calculateInventoryTotal() const {
 return rawMaterials
 + workInProcess
