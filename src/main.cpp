@@ -6,6 +6,9 @@
 #include "corporate_planning/core/ProductionLineInfo.hpp"
 #include "corporate_planning/core/PersonnelInfo.hpp"
 #include "corporate_planning/core/OtherInfo.hpp"
+#include "corporate_planning/core/ManufacturingCompany.hpp"
+#include "corporate_planning/core/User.hpp"
+#include "corporate_planning/core/Equation.hpp"
 
 
 using namespace std;
@@ -273,7 +276,185 @@ int main() {
           << otherInfo.getTimeVariable()
           << '\n';
 
+     //--- ManufacturingCompany Test ---
+     corporate_planning::core::ManufacturingCompany company(
+          "Novin Industrial Co.", "REG-1402-998", "Electronics Manufacturing", 2026
+     );
 
+     // ۱. مقداردهی اطلاعات مالی (ترازنامه و سود و زیان)
+     company.getBalanceSheet().getAssets().setCashInBank(150000.0);
+     company.getBalanceSheet().getAssets().setLand(300000.0);
+     company.getBalanceSheet().getLiabilities().setAccountsPayable(45000.0);
+
+     // ۲. مقداردهی پرسنل ستادی
+     company.getPersonnelInfo().setAdministrativeStaff(10);
+     company.getPersonnelInfo().setSalesAndDistributionStaff(15);
+     company.getPersonnelInfo().setOtherStaff(5);
+
+     // ۳. افزودن خطوط تولید داینامیک با وکتور
+     // خط تولید اول: مدار الکترونیکی
+     corporate_planning::core::ProductionLineInfo lineCircuit;
+     lineCircuit.setWorkerCount(25);
+     lineCircuit.setProductionAmount(2000.0);
+     lineCircuit.setSalesAmount(1800.0);
+     lineCircuit.setSalePrice(120.0);
+     lineCircuit.setFixedCosts(35000.0);
+     lineCircuit.setVariableCosts(80000.0);
+     company.addProductionLine(lineCircuit);
+
+     // خط تولید دوم: قطعات مکانیکی
+     corporate_planning::core::ProductionLineInfo lineMech;
+     lineMech.setWorkerCount(15);
+     lineMech.setProductionAmount(1000.0);
+     lineMech.setSalesAmount(900.0);
+     lineMech.setSalePrice(95.0);
+     lineMech.setFixedCosts(20000.0);
+     lineMech.setVariableCosts(45000.0);
+     company.addProductionLine(lineMech);
+
+     cout << "--- ManufacturingCompany ---\n";
+     cout << "Company name: "
+          << company.getCompanyName()
+          << '\n';
+
+     cout << "Industry type: "
+          << company.getIndustryType()
+          << '\n';
+
+     cout << "Fiscal year: "
+          << company.getFiscalYear()
+          << '\n';
+
+     cout << "Production lines count: "
+          << company.getProductionLineCount()
+          << '\n';
+
+     cout << "Total company revenue: "
+          << company.calculateTotalCompanyRevenue()
+          << '\n';
+
+     cout << "Total production costs: "
+          << company.calculateTotalProductionCosts()
+          << '\n';
+
+     cout << "Total company profit: "
+          << company.calculateTotalCompanyProfit()
+          << '\n';
+
+     cout << "Total company employment: "
+          << company.calculateTotalCompanyEmployment()
+          << '\n';
+     
+     //--- User Test ---
+     corporate_planning::core::User user(
+          "USR-101",
+          "Ermia Parsamanesh",
+          "ermiaparsa",
+          "hashed_sec_pass_2026",
+          "parsamanesh.ermia@gmail.com",
+          corporate_planning::core::UserRole::PLANNER
+     );
+
+     user.setLastLogin("2026-09-08 08:30:00");
+
+     cout << "--- User ---\n";
+     cout << "User ID: "
+          << user.getUserId()
+          << '\n';
+
+     cout << "Full name: "
+          << user.getFullName()
+          << '\n';
+
+     cout << "Username: "
+          << user.getUsername()
+          << '\n';
+
+     cout << "Email: "
+          << user.getEmail()
+          << '\n';
+
+     cout << "Role: "
+          << user.getRoleString()
+          << '\n';
+
+     cout << "Is active: "
+          << (user.getIsActive() ? "true" : "false")
+          << '\n';
+
+     cout << "Last login: "
+          << user.getLastLogin()
+          << '\n';
+
+     cout << "Auth test (correct): "
+          << (user.authenticate("ermiaparsa", "hashed_sec_pass_2026") ? "Success" : "Failed")
+          << '\n';
+
+     cout << "Auth test (wrong pwd): "
+          << (user.authenticate("ermiaparsa", "wrong_pass") ? "Success" : "Failed")
+          << '\n';
+
+     //--- Equation Test ---
+     corporate_planning::core::Equation costModel(
+          "EQ-COST-01",
+          "Total Production Cost Model",
+          corporate_planning::core::EquationType::LINEAR,
+          5000.0 // Intercept (هزینه ثابت پایه)
+     );
+
+     // افزودن ضرایب متغیرها (مثلاً: ۲۵ دلار برای هر ساعت کار، ۱۲.۵ دلار برای هر واحد مواد اولیه)
+     costModel.addTerm("LaborHours", 25.0);
+     costModel.addTerm("RawMaterialUnits", 12.5);
+
+     // بردار ورودی برای تست: ۱۰۰ ساعت کار و ۲۰۰ واحد ماده اولیه
+     vector<double> sampleInput = {100.0, 200.0};
+     double predictedCost = costModel.evaluate(sampleInput);
+
+     // محاسبه خطا با مقدار واقعی ثبت‌شده در بنگاه (مثلاً ۱۰۰۰۰ دلار)
+     double actualCost = 10000.0;
+     double residual = costModel.calculateResidual(sampleInput, actualCost);
+
+     // تست دیتاست کوچک برای محاسبه MSE
+     vector<vector<double>> dataset = {
+          {100.0, 200.0},
+          {120.0, 250.0},
+          {80.0, 150.0}
+     };
+     vector<double> actuals = {10000.0, 11125.0, 8875.0};
+     double mse = costModel.calculateMSE(dataset, actuals);
+
+     cout << "--- Equation ---\n";
+     cout << "Equation ID: "
+          << costModel.getEquationId()
+          << '\n';
+
+     cout << "Equation name: "
+          << costModel.getEquationName()
+          << '\n';
+
+     cout << "Equation type: "
+          << costModel.getTypeString()
+          << '\n';
+
+     cout << "Formula: "
+          << costModel.toFormulaString()
+          << '\n';
+
+     cout << "Predicted cost: "
+          << predictedCost
+          << '\n';
+
+     cout << "Actual cost: "
+          << actualCost
+          << '\n';
+
+     cout << "Residual (Error): "
+          << residual
+          << '\n';
+
+     cout << "Dataset MSE: "
+          << mse
+          << '\n';
 
      return 0;
 
