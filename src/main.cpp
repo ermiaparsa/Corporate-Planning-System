@@ -5,7 +5,7 @@
 #include "corporate_planning/core/FinancialRatios.hpp"  
 #include "corporate_planning/core/ProductionLineInfo.hpp"
 #include "corporate_planning/core/PersonnelInfo.hpp"
-
+#include "corporate_planning/core/OtherInfo.hpp"
 
 
 using namespace std;
@@ -220,7 +220,61 @@ int main() {
           << personnelInfo.calculateTotalEmployment()
           << '\n';
 
-          
+     //--- OtherInfo Test ---
+     corporate_planning::core::OtherInfo otherInfo;
+
+     // ۱. نرخ بازگشت روی سرمایه‌گذاری
+     otherInfo.setRoiRate(18.5);
+
+     // ۲. متغیرهای ارزی
+     otherInfo.setUnitForeignExchangeForProduction(12.5); // ارز به ازای هر واحد محصول (مثلاً دلار)
+     otherInfo.setForeignExchangeUsed(125000.0);          // کل ارز مصرف‌شده
+
+     // ۳. ارزش تولیدات
+     otherInfo.setProductionValue(850000.0);
+
+     // ۴. متغیرهای کمکی (Auxiliary Variables)
+     corporate_planning::core::AuxiliaryVariables auxVars;
+     auxVars.crisisPeriodFactor = 1.15;           // ضریب دوران بحران
+     auxVars.administrativeExpensesFactor = 0.08; // ضریب هزینه‌های اداری
+     auxVars.fxShortagePeriodFactor = 1.25;       // ضریب کاهش منابع ارزی
+     auxVars.otherAuxiliaryFactor = 0.05;         // متغیر کمکی دیگر
+     otherInfo.setAuxiliaryVariables(auxVars);
+
+     // ۵. متغیر مربوط به زمان (مثلاً سال یا دوره زمانی)
+     otherInfo.setTimeVariable(2026.0);
+
+     cout << "--- OtherInfo ---\n";
+     cout << "ROI rate: "
+          << otherInfo.getRoiRate()
+          << "%\n";
+
+     cout << "Foreign exchange used: "
+          << otherInfo.getForeignExchangeUsed()
+          << '\n';
+
+     cout << "Unit foreign exchange for production: "
+          << otherInfo.getUnitForeignExchangeForProduction()
+          << '\n';
+
+     cout << "Production value: "
+          << otherInfo.getProductionValue()
+          << '\n';
+
+     cout << "Crisis period factor: "
+          << otherInfo.getAuxiliaryVariables().crisisPeriodFactor
+          << '\n';
+
+     cout << "FX shortage period factor: "
+          << otherInfo.getAuxiliaryVariables().fxShortagePeriodFactor
+          << '\n';
+
+     cout << "Time variable: "
+          << otherInfo.getTimeVariable()
+          << '\n';
+
+
+
      return 0;
 
 }

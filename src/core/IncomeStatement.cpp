@@ -1,4 +1,5 @@
 #include "corporate_planning/core/IncomeStatement.hpp"
+#include <iostream>
 
 namespace corporate_planning::core {
 

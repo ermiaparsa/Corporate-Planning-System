@@ -1,4 +1,5 @@
 #include "corporate_planning/core/ProductionLineInfo.hpp"
+#include <iostream>
 
 namespace corporate_planning::core {
 
