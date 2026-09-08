@@ -1,5 +1,5 @@
-#ifndef CORPORATE_PLANNING_CORE_FinancialRatios_HPP
-#define CORPORATE_PLANNING_CORE_FinancialRatios_HPP
+#ifndef CORPORATE_PLANNING_CORE_FINANCIALRATIOS_HPP
+#define CORPORATE_PLANNING_CORE_FINANCIALRATIOS_HPP
 
 #include "corporate_planning/core/BalanceSheet.hpp"
 #include "corporate_planning/core/IncomeStatement.hpp"
@@ -43,4 +43,4 @@ private:
 
 } // namespace corporate_planning::core
 
-#endif // CORPORATE_PLANNING_CORE_FinancialRatios_HPP
+#endif // CORPORATE_PLANNING_CORE_FINANCIALRATIOS_HPP

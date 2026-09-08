@@ -111,4 +111,4 @@ private:
 
 } // namespace corporate_planning::core
 
-#endif // CORPORATE_PLANNING_CORE_IncomeStatement_HPP
+#endif // CORPORATE_PLANNING_CORE_INCOMESTATEMENT_HPP

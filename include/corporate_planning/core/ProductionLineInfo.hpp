@@ -1,5 +1,5 @@
-#ifndef CORPORATE_PLANNING_CORE_ProductionLineInfo_HPP
-#define CORPORATE_PLANNING_CORE_ProductionLineInfo_HPP
+#ifndef CORPORATE_PLANNING_CORE_PRODUCTIONLINEINFO_HPP
+#define CORPORATE_PLANNING_CORE_PRODUCTIONLINEINFO_HPP
 
 namespace corporate_planning::core {
 
@@ -71,4 +71,4 @@ private:
 
 } // namespace corporate_planning::core
 
-#endif // CORPORATE_PLANNING_CORE_ProductionLineInfo_HPP
+#endif // CORPORATE_PLANNING_CORE_PRODUCTIONLINEINFO_HPP
