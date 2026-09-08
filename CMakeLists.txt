@@ -11,13 +11,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 elseif(MSVC)
     add_compile_options(/W4 /permissive-)
 endif()
 
-add_executable(corporate_planning
+set(SOURCES
     src/main.cpp
     src/api/Cli.cpp
     src/core/BalanceSheet.cpp
@@ -31,8 +33,12 @@ add_executable(corporate_planning
     src/core/ManufacturingCompany.cpp
     src/core/User.cpp
     src/core/Equation.cpp
+    src/app/App.cpp
+    src/gui/MainWindow.cpp
 )
+add_executable(corporate_planning ${SOURCES})
 
+target_link_libraries(corporate_planning PRIVATE Qt6::Widgets)
 target_include_directories(corporate_planning
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -48,29 +54,10 @@ find_package(GTest QUIET)
 
 if(GTest_FOUND)
     enable_testing()
-
-    add_executable(corporate_planning_tests
-        tests/test_main.cpp
-    )
-
-    target_link_libraries(corporate_planning_tests
-        PRIVATE
-            GTest::gtest
-            GTest::gtest_main
-    )
-
-    add_test(
-        NAME corporate_planning_tests
-        COMMAND corporate_planning_tests
-    )
-
-    set_target_properties(corporate_planning_tests
-        PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY
-            ${CMAKE_BINARY_DIR}/bin
-    )
-else()
-    message(STATUS "GTest not found - tests will be skipped")
+    add_executable(corporate_planning_tests tests/test_main.cpp)
+    target_link_libraries(corporate_planning_tests PRIVATE GTest::gtest GTest::gtest_main)
+    add_test(NAME corporate_planning_tests COMMAND corporate_planning_tests)
+    set_target_properties(corporate_planning_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
 include(GNUInstallDirs)

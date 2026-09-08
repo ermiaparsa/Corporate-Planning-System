@@ -9,7 +9,10 @@
 #include "corporate_planning/core/ManufacturingCompany.hpp"
 #include "corporate_planning/core/User.hpp"
 #include "corporate_planning/core/Equation.hpp"
+#include "corporate_planning/app/App.hpp"
+#include "corporate_planning/gui/MainWindow.hpp"
 
+#include <QApplication>
 
 using namespace std;
 
@@ -17,7 +20,8 @@ namespace corporate_planning::api {
     void runCli();
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+     /*
      corporate_planning::api::runCli();
 
      cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl<<"Corporate Planning - Firm Planning Model\n";
@@ -455,7 +459,12 @@ int main() {
      cout << "Dataset MSE: "
           << mse
           << '\n';
+     */
+     QApplication application(argc, argv);
 
-     return 0;
+     corporate_planning::gui::MainWindow mainWindow;
+     mainWindow.show();
+
+     return application.exec();
 
 }
