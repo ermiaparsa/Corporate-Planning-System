@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QStackedWidget>
 #include <QString>
 #include <QVBoxLayout>
@@ -18,8 +19,8 @@ MainWindow::MainWindow(QWidget* parent)
       pageTitleLabel(nullptr),
       pageStack(nullptr) {
     setWindowTitle("Corporate Planning System");
-    resize(1100, 700);
-    setMinimumSize(900, 600);
+    resize(1200, 800);
+    setMinimumSize(1000, 680);
 
     auto* centralWidget = new QWidget(this);
     auto* mainLayout = new QHBoxLayout(centralWidget);
@@ -29,224 +30,331 @@ MainWindow::MainWindow(QWidget* parent)
 
     auto* sidebar = new QFrame(centralWidget);
     sidebar->setObjectName("sidebar");
-    sidebar->setFixedWidth(230);
+    sidebar->setFixedWidth(290);
 
-    auto* sidebarLayout = new QVBoxLayout(sidebar);
-    sidebarLayout->setContentsMargins(18, 25, 18, 25);
-    sidebarLayout->setSpacing(10);
+    auto* sidebarOuterLayout = new QVBoxLayout(sidebar);
+    sidebarOuterLayout->setContentsMargins(0, 0, 0, 0);
+    sidebarOuterLayout->setSpacing(0);
+
+    auto* appHeader = new QWidget(sidebar);
+    appHeader->setObjectName("appHeader");
+    auto* appHeaderLayout = new QVBoxLayout(appHeader);
+    appHeaderLayout->setContentsMargins(20, 24, 20, 16);
 
     auto* applicationTitle = new QLabel("Corporate\nPlanning", sidebar);
     applicationTitle->setObjectName("applicationTitle");
-    applicationTitle->setAlignment(Qt::AlignCenter);
+    applicationTitle->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    sidebarLayout->addWidget(applicationTitle);
-    sidebarLayout->addSpacing(25);
+    auto* applicationSubtitle = new QLabel("Corporate Planning System", appHeader);
+    applicationSubtitle->setObjectName("applicationSubtitle");
+    applicationSubtitle->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    appHeaderLayout->addWidget(applicationTitle);
+    appHeaderLayout->addWidget(applicationSubtitle);
+    sidebarOuterLayout->addWidget(appHeader);
+
+    // Scroll Area for Navigation
+    auto* scrollArea = new QScrollArea(sidebar);
+    scrollArea->setObjectName("sidebarScroll");
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    auto* navContainer = new QWidget();
+    navContainer->setObjectName("navContainer");
+    auto* navLayout = new QVBoxLayout(navContainer);
+    navLayout->setContentsMargins(12, 10, 12, 15);
+    navLayout->setSpacing(4);
+
+    // ==========================================
+    // Navigation Modules (12 Templates + Dashboard)
+    // ==========================================
+    
+    // Overview
+    addNavButton(navLayout, "📊  Dashboard Overview", 0);
+
+    // 1. Base Data Entry
+    addSectionHeader(navLayout, "BASE DATA ENTRY");
+    addNavButton(navLayout, "📋  Balance Sheet", 1);
+    addNavButton(navLayout, "💰  Income Statement", 2);
+    addNavButton(navLayout, "🏭  Production Lines", 3);
+    addNavButton(navLayout, "👥  Personnel & Exchange", 4);
+
+    // 2. Financial Analysis
+    addSectionHeader(navLayout, "FINANCIAL ANALYSIS");
+    addNavButton(navLayout, "📈  Financial Ratios", 5);
+
+    // 3. Modeling & Projections
+    addSectionHeader(navLayout, "MODELING & FORECASTING");
+    addNavButton(navLayout, "🌐  Exogenous Variables", 6);
+    addNavButton(navLayout, "📐  Equations & Formulas", 7);
+    addNavButton(navLayout, "⚡  Run Forecast Engine", 8);
+
+    // 4. Reporting & History
+    addSectionHeader(navLayout, "REPORTS & ARCHIVES");
+    addNavButton(navLayout, "📜  Historical Data", 9);
+    addNavButton(navLayout, "🔮  Forecasted Projections", 10);
+
+    // 5. System & Security
+    addSectionHeader(navLayout, "SYSTEM & SECURITY");
+    addNavButton(navLayout, "👤  User Management", 11);
+    addNavButton(navLayout, "🔐  Authentication / Login", 12);
+
+    navLayout->addStretch();
+    scrollArea->setWidget(navContainer);
+    sidebarOuterLayout->addWidget(scrollArea, 1);
+
+    // Exit Button Footer
+    auto* footerWidget = new QWidget(sidebar);
+    footerWidget->setObjectName("sidebarFooter");
+    auto* footerLayout = new QVBoxLayout(footerWidget);
+    footerLayout->setContentsMargins(16, 12, 16, 16);
+
+    auto* exitButton = new QPushButton("Exit System", footerWidget);
+    exitButton->setObjectName("exitButton");
+    exitButton->setCursor(Qt::PointingHandCursor);
+    exitButton->setMinimumHeight(40);
+    connect(exitButton, &QPushButton::clicked, qApp, &QApplication::quit);
+
+    footerLayout->addWidget(exitButton);
+    sidebarOuterLayout->addWidget(footerWidget);
 
     auto* contentWidget = new QWidget(centralWidget);
     contentWidget->setObjectName("contentWidget");
 
     auto* contentLayout = new QVBoxLayout(contentWidget);
-    contentLayout->setContentsMargins(30, 25, 30, 30);
-    contentLayout->setSpacing(20);
+    contentLayout->setContentsMargins(32, 28, 32, 32);
+    contentLayout->setSpacing(16);
 
-    pageTitleLabel = new QLabel("Dashboard", contentWidget);
+    auto* headerBox = new QWidget(contentWidget);
+    auto* headerLayout = new QVBoxLayout(headerBox);
+    headerLayout->setContentsMargins(0, 0, 0, 0);
+    headerLayout->setSpacing(4);
+
+    pageTitleLabel = new QLabel("Dashboard Overview", headerBox);
     pageTitleLabel->setObjectName("pageTitle");
+
+    pageSubtitleLabel = new QLabel("Enterprise Performance & Corporate Planning Overview", headerBox);
+    pageSubtitleLabel->setObjectName("pageSubtitle");
+
+    headerLayout->addWidget(pageTitleLabel);
+    headerLayout->addWidget(pageSubtitleLabel);
+    contentLayout->addWidget(headerBox);
 
     pageStack = new QStackedWidget(contentWidget);
 
-    pageStack->addWidget(
-        createPage(
-            "Dashboard",
-            "Overview of the company's planning information."
-        )
-    );
+     // Registering 12 Template Pages + Dashboard
+    pageStack->addWidget(createPage("Dashboard Overview", "System Status & Summary", "Comprehensive snapshot of core enterprise indicators, operational outputs, and forecasting status."));
+    pageStack->addWidget(createPage("Template 1: Balance Sheet Entry", "Current & Non-Current Assets / Liabilities", "Input and manage current assets, fixed assets, short/long-term liabilities, and equity structure."));
+    pageStack->addWidget(createPage("Template 2: Income Statement Entry", "Revenues, Costs & Profitability", "Log operational revenues, cost of goods sold (COGS), operating expenses, taxes, and net profits."));
+    pageStack->addWidget(createPage("Template 3: Production Lines Configuration", "Capacity & Unit Economics", "Define nominal vs. actual capacities, per-unit manufacturing costs, product lines, and operational efficiencies."));
+    pageStack->addWidget(createPage("Template 4: Personnel, FX & Macro Auxiliaries", "Workforce & Macro Indicators", "Maintain headcount, wage structures, inflation rates, and foreign exchange (FX) market parameters."));
+    pageStack->addWidget(createPage("Template 5: Financial Ratios Generation", "Ratio Analysis & Benchmark Indicators", "Automated computation and trend monitoring of Liquidity, Solvency, Turnover, and Profitability (ROA, ROE, ROS)."));
+    pageStack->addWidget(createPage("Template 6: Exogenous Variables Definition", "External Economic Drivers", "Configure macro external parameters that are outside firm control (e.g., market growth, commodity prices, tariffs)."));
+    pageStack->addWidget(createPage("Template 7: Equations & Econometric Setup", "Structural Model & Production Functions", "Formulate econometric relations, Cobb-Douglas production functions, cost curves, and regression parameters."));
+    pageStack->addWidget(createPage("Template 8: Forecast Execution Engine", "Multi-Year Dynamic Simulation", "Run dynamic forward-looking simulations, solve system equations, and compute multi-scenario projections."));
+    pageStack->addWidget(createPage("Template 9: Historical Data & Trend Reports", "Past Financial Performance Archive", "Review time-series historical records, longitudinal performance data, and multi-period financial tables."));
+    pageStack->addWidget(createPage("Template 10: Forecasted Projections Display", "Future Projected Statements", "Visualize generated future balance sheets, projected income statements, cash flow estimates, and scenario bands."));
+    pageStack->addWidget(createPage("Template 11: User & Role Management", "Access Control & Audit Trail", "Configure access roles (Administrator, Financial Analyst, Auditor), user privileges, and track system logs."));
+    pageStack->addWidget(createPage("Template 12: Authentication & Security", "User Credentials & Session Management", "Manage user logins, session tokens, password hashing, and authentication policies."));
 
-    pageStack->addWidget(
-        createPage(
-            "Production Lines",
-            "Manage production lines, costs, revenue and efficiency."
-        )
-    );
-
-    pageStack->addWidget(
-        createPage(
-            "Personnel",
-            "Manage production, distribution and administrative personnel."
-        )
-    );
-
-    pageStack->addWidget(
-        createPage(
-            "Financial Ratios",
-            "View assets, liabilities, equity and financial ratios."
-        )
-    );
-
-    pageStack->addWidget(
-        createPage(
-            "Equations",
-            "Create and evaluate planning equations."
-        )
-    );
-
-    pageStack->addWidget(
-        createPage(
-            "User Profile",
-            "View and edit the current user profile."
-        )
-    );
-
-    contentLayout->addWidget(pageTitleLabel);
     contentLayout->addWidget(pageStack, 1);
-
-    const auto addNavigationButton =
-        [this, sidebarLayout](const QString& text, int pageIndex) {
-            auto* button = new QPushButton(text);
-            button->setObjectName("navigationButton");
-            button->setCursor(Qt::PointingHandCursor);
-            button->setMinimumHeight(45);
-
-            connect(
-                button,
-                &QPushButton::clicked,
-                this,
-                [this, text, pageIndex]() {
-                    pageTitleLabel->setText(text);
-                    pageStack->setCurrentIndex(pageIndex);
-                }
-            );
-
-            sidebarLayout->addWidget(button);
-        };
-
-    addNavigationButton("Dashboard", 0);
-    addNavigationButton("Production Lines", 1);
-    addNavigationButton("Personnel", 2);
-    addNavigationButton("Financial Ratios", 3);
-    addNavigationButton("Equations", 4);
-    addNavigationButton("User Profile", 5);
-
-    sidebarLayout->addStretch();
-
-    auto* exitButton = new QPushButton("Exit", sidebar);
-    exitButton->setObjectName("exitButton");
-    exitButton->setCursor(Qt::PointingHandCursor);
-    exitButton->setMinimumHeight(45);
-
-    connect(
-        exitButton,
-        &QPushButton::clicked,
-        qApp,
-        &QApplication::quit
-    );
-
-    sidebarLayout->addWidget(exitButton);
 
     mainLayout->addWidget(sidebar);
     mainLayout->addWidget(contentWidget, 1);
-
     setCentralWidget(centralWidget);
 
+     // ==========================================
+    // Dark Modern UI Styling (QSS)
+    // ==========================================
     setStyleSheet(R"(
         QMainWindow {
-            background-color: #f4f6f9;
+            background-color: #0f172a;
         }
 
         QWidget#contentWidget {
-            background-color: #f4f6f9;
+            background-color: #0f172a;
         }
 
         QFrame#sidebar {
-            background-color: #18212f;
+            background-color: #1e293b;
+            border-right: 1px solid #334155;
+        }
+
+        QWidget#appHeader {
+            background-color: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+
+        QWidget#navContainer {
+            background-color: #1e293b;
+        }
+
+        QScrollArea#sidebarScroll {
+            background-color: transparent;
+            border: none;
+        }
+
+        QScrollBar:vertical {
+            background: transparent;
+            width: 6px;
+            margin: 0;
+        }
+
+        QScrollBar::handle:vertical {
+            background: #475569;
+            min-height: 20px;
+            border-radius: 3px;
+        }
+
+        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+            height: 0px;
         }
 
         QLabel#applicationTitle {
-            color: white;
-            font-size: 23px;
+            color: #38bdf8;
+            font-size: 19px;
             font-weight: bold;
+        }
+
+        QLabel#applicationSubtitle {
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        QLabel#sectionHeader {
+            color: #64748b;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.8px;
+            padding: 14px 10px 4px 10px;
         }
 
         QLabel#pageTitle {
-            color: #18212f;
-            font-size: 27px;
+            color: #f8fafc;
+            font-size: 24px;
             font-weight: bold;
         }
 
+        QLabel#pageSubtitle {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
         QPushButton#navigationButton {
-            color: #d8dee9;
+            color: #cbd5e1;
             background-color: transparent;
             border: none;
-            border-radius: 7px;
-            padding: 10px 14px;
+            border-radius: 8px;
+            padding: 9px 12px;
             text-align: left;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         QPushButton#navigationButton:hover {
-            color: white;
-            background-color: #2d3b50;
+            color: #ffffff;
+            background-color: #334155;
         }
 
         QPushButton#navigationButton:pressed {
-            background-color: #3b82f6;
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+
+        QWidget#sidebarFooter {
+            border-top: 1px solid #334155;
         }
 
         QPushButton#exitButton {
-            color: white;
-            background-color: #dc3545;
-            border: none;
-            border-radius: 7px;
-            font-size: 14px;
+            color: #fca5a5;
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            font-size: 13px;
             font-weight: bold;
         }
 
         QPushButton#exitButton:hover {
-            background-color: #bb2d3b;
+            background-color: #dc2626;
+            color: white;
         }
 
         QFrame#pageCard {
-            background-color: white;
-            border: 1px solid #dde2e8;
-            border-radius: 12px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
         }
 
         QLabel#cardTitle {
-            color: #1f2937;
-            font-size: 22px;
+            color: #f8fafc;
+            font-size: 20px;
             font-weight: bold;
         }
 
+        QLabel#cardSubtitle {
+            color: #38bdf8;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
         QLabel#cardDescription {
-            color: #667085;
-            font-size: 15px;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.5;
         }
     )");
 }
 
+void MainWindow::addSectionHeader(QVBoxLayout* layout, const QString& title) {
+    auto* header = new QLabel(title);
+    header->setObjectName("sectionHeader");
+    header->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    layout->addWidget(header);
+}
+
+void MainWindow::addNavButton(QVBoxLayout* layout, const QString& text, int pageIndex) {
+    auto* button = new QPushButton(text);
+    button->setObjectName("navigationButton");
+    button->setCursor(Qt::PointingHandCursor);
+    button->setMinimumHeight(38);
+
+    connect(button, &QPushButton::clicked, this, [this, text, pageIndex]() {
+        pageTitleLabel->setText(text);
+        pageStack->setCurrentIndex(pageIndex);
+    });
+
+    layout->addWidget(button);
+}
+
 QWidget* MainWindow::createPage(
     const QString& title,
+    const QString& subtitle,
     const QString& description
 ) {
     auto* page = new QWidget();
     auto* pageLayout = new QVBoxLayout(page);
-
     pageLayout->setContentsMargins(0, 0, 0, 0);
 
     auto* card = new QFrame(page);
     card->setObjectName("pageCard");
 
     auto* cardLayout = new QVBoxLayout(card);
-    cardLayout->setContentsMargins(30, 30, 30, 30);
-    cardLayout->setSpacing(15);
+    cardLayout->setContentsMargins(35, 35, 35, 35);
+    cardLayout->setSpacing(12);
 
     auto* titleLabel = new QLabel(title, card);
     titleLabel->setObjectName("cardTitle");
+
+    auto* subtitleLabel = new QLabel(subtitle, card);
+    subtitleLabel->setObjectName("cardSubtitle");
 
     auto* descriptionLabel = new QLabel(description, card);
     descriptionLabel->setObjectName("cardDescription");
     descriptionLabel->setWordWrap(true);
 
     cardLayout->addWidget(titleLabel);
+    cardLayout->addWidget(subtitleLabel);
     cardLayout->addWidget(descriptionLabel);
     cardLayout->addStretch();
 

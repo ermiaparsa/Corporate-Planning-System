@@ -7,6 +7,7 @@ class QLabel;
 class QString;
 class QStackedWidget;
 class QWidget;
+class QVBoxLayout;
 
 namespace corporate_planning::gui {
 
@@ -15,13 +16,17 @@ public:
     explicit MainWindow(QWidget* parent = nullptr);
 
 private:
+    void addSectionHeader(QVBoxLayout* layout, const QString& title);
+    void addNavButton(QVBoxLayout* layout, const QString& text, int pageIndex);
     QWidget* createPage(
         const QString& title,
+        const QString& subtitle,
         const QString& description
     );
 
-    QLabel* pageTitleLabel;
-    QStackedWidget* pageStack;
+    QLabel* pageTitleLabel = nullptr;
+    QLabel* pageSubtitleLabel = nullptr;
+    QStackedWidget* pageStack = nullptr;
 };
 
 } // namespace corporate_planning::gui
