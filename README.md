@@ -14,7 +14,7 @@ A C++ implementation of the **Firm Planning** academic model. This repository fo
 ## Roadmap
 
 - [x] Initial project structure setup
-- [ ] Implement core planning models from the reference textbook
+- [x] Implement core planning models from the reference textbook
 - [ ] Develop testing scenarios for production constraints
 - [ ] Integrate advanced optimization techniques
 - [ ] Explore AI/ML agents for automated decision support
