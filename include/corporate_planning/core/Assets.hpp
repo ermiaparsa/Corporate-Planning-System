@@ -34,6 +34,19 @@ public:
     double getCashOnHand() const;
     double getCashInBank() const;
     double getAccountsReceivable() const;
+    double getLand() const;
+    double getBuildings() const;
+    double getMachinery() const;
+    double getFurniture() const;
+    double getVehicles() const;
+    double getInstallations() const;
+    double getRawMaterials() const;
+    double getWorkInProcess() const;
+    double getFinishedGoods() const;
+    double getSpareParts() const;
+    double getSaleableWaste() const;
+    double getLongTermInvestments() const;
+    double getExternalInvestments() const;
 
 private:
     // دارایی‌های جاری

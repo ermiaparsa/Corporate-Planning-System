@@ -23,6 +23,8 @@ set(SOURCES
     src/main.cpp
     src/api/Cli.cpp
     src/core/BalanceSheet.cpp
+    src/core/BalanceSheetRecord.cpp
+    src/core/BalanceSheetService.cpp
     src/core/Assets.cpp
     src/core/Liabilities.cpp
     src/core/IncomeStatement.cpp
@@ -36,6 +38,7 @@ set(SOURCES
     src/core/Equation.cpp
     src/app/App.cpp
     src/gui/MainWindow.cpp
+    src/gui/BalanceSheetPage.cpp
     src/gui/UserManagementPage.cpp
 )
 add_executable(corporate_planning ${SOURCES})

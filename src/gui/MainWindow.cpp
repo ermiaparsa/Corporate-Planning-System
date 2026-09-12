@@ -1,4 +1,5 @@
 #include "corporate_planning/gui/MainWindow.hpp"
+#include "corporate_planning/gui/BalanceSheetPage.hpp"
 #include "corporate_planning/gui/UserManagementPage.hpp"
 
 #include <QApplication>
@@ -82,7 +83,7 @@ MainWindow::MainWindow(QWidget* parent)
     addNavButton(navLayout, "📋  Balance Sheet", 1);
     addNavButton(navLayout, "💰  Income Statement", 2);
     addNavButton(navLayout, "🏭  Production Lines", 3);
-    addNavButton(navLayout, "👥  Personnel & Exchange", 4);
+    addNavButton(navLayout, "👥  Personnel and Exchange", 4);
 
     // 2. Financial Analysis
     addSectionHeader(navLayout, "FINANCIAL ANALYSIS");
@@ -91,7 +92,7 @@ MainWindow::MainWindow(QWidget* parent)
     // 3. Modeling & Projections
     addSectionHeader(navLayout, "MODELING & FORECASTING");
     addNavButton(navLayout, "🌐  Exogenous Variables", 6);
-    addNavButton(navLayout, "📐  Equations & Formulas", 7);
+    addNavButton(navLayout, "📐  Equations and Formulas", 7);
     addNavButton(navLayout, "⚡  Run Forecast Engine", 8);
 
     // 4. Reporting & History
@@ -149,16 +150,16 @@ MainWindow::MainWindow(QWidget* parent)
 
      // Registering 12 Template Pages + Dashboard
     pageStack->addWidget(createPage("Dashboard Overview", "System Status & Summary", "Comprehensive snapshot of core enterprise indicators, operational outputs, and forecasting status."));
-    pageStack->addWidget(createPage("Template 1: Balance Sheet Entry", "Current & Non-Current Assets / Liabilities", "Input and manage current assets, fixed assets, short/long-term liabilities, and equity structure."));
-    pageStack->addWidget(createPage("Template 2: Income Statement Entry", "Revenues, Costs & Profitability", "Log operational revenues, cost of goods sold (COGS), operating expenses, taxes, and net profits."));
-    pageStack->addWidget(createPage("Template 3: Production Lines Configuration", "Capacity & Unit Economics", "Define nominal vs. actual capacities, per-unit manufacturing costs, product lines, and operational efficiencies."));
-    pageStack->addWidget(createPage("Template 4: Personnel, FX & Macro Auxiliaries", "Workforce & Macro Indicators", "Maintain headcount, wage structures, inflation rates, and foreign exchange (FX) market parameters."));
-    pageStack->addWidget(createPage("Template 5: Financial Ratios Generation", "Ratio Analysis & Benchmark Indicators", "Automated computation and trend monitoring of Liquidity, Solvency, Turnover, and Profitability (ROA, ROE, ROS)."));
-    pageStack->addWidget(createPage("Template 6: Exogenous Variables Definition", "External Economic Drivers", "Configure macro external parameters that are outside firm control (e.g., market growth, commodity prices, tariffs)."));
-    pageStack->addWidget(createPage("Template 7: Equations & Econometric Setup", "Structural Model & Production Functions", "Formulate econometric relations, Cobb-Douglas production functions, cost curves, and regression parameters."));
-    pageStack->addWidget(createPage("Template 8: Forecast Execution Engine", "Multi-Year Dynamic Simulation", "Run dynamic forward-looking simulations, solve system equations, and compute multi-scenario projections."));
-    pageStack->addWidget(createPage("Template 9: Historical Data & Trend Reports", "Past Financial Performance Archive", "Review time-series historical records, longitudinal performance data, and multi-period financial tables."));
-    pageStack->addWidget(createPage("Template 10: Forecasted Projections Display", "Future Projected Statements", "Visualize generated future balance sheets, projected income statements, cash flow estimates, and scenario bands."));
+    pageStack->addWidget(new BalanceSheetPage(balanceSheetService, pageStack));
+    pageStack->addWidget(createPage("Income Statement Entry", "Revenues, Costs & Profitability", "Log operational revenues, cost of goods sold (COGS), operating expenses, taxes, and net profits."));
+    pageStack->addWidget(createPage("Production Lines Configuration", "Capacity & Unit Economics", "Define nominal vs. actual capacities, per-unit manufacturing costs, product lines, and operational efficiencies."));
+    pageStack->addWidget(createPage("Personnel, FX & Macro Auxiliaries", "Workforce & Macro Indicators", "Maintain headcount, wage structures, inflation rates, and foreign exchange (FX) market parameters."));
+    pageStack->addWidget(createPage("Financial Ratios Generation", "Ratio Analysis & Benchmark Indicators", "Automated computation and trend monitoring of Liquidity, Solvency, Turnover, and Profitability (ROA, ROE, ROS)."));
+    pageStack->addWidget(createPage("Exogenous Variables Definition", "External Economic Drivers", "Configure macro external parameters that are outside firm control (e.g., market growth, commodity prices, tariffs)."));
+    pageStack->addWidget(createPage("Equations & Econometric Setup", "Structural Model & Production Functions", "Formulate econometric relations, Cobb-Douglas production functions, cost curves, and regression parameters."));
+    pageStack->addWidget(createPage("Forecast Execution Engine", "Multi-Year Dynamic Simulation", "Run dynamic forward-looking simulations, solve system equations, and compute multi-scenario projections."));
+    pageStack->addWidget(createPage("Historical Data & Trend Reports", "Past Financial Performance Archive", "Review time-series historical records, longitudinal performance data, and multi-period financial tables."));
+    pageStack->addWidget(createPage("Forecasted Projections Display", "Future Projected Statements", "Visualize generated future balance sheets, projected income statements, cash flow estimates, and scenario bands."));
     pageStack->addWidget(new UserManagementPage(userService, pageStack));
     pageStack->addWidget(createAuthenticationPage());
 
@@ -322,6 +323,45 @@ MainWindow::MainWindow(QWidget* parent)
         QLabel#statusLabel { color: #cbd5e1; }
         QLabel#statusLabel[state="error"] { color: #fca5a5; }
         QLabel#statusLabel[state="success"] { color: #86efac; }
+        QLabel#statusLabel[state="info"] { color: #38bdf8; }
+        QScrollArea#formScroll, QWidget#formContainer { background: transparent; border: none; }
+        QLabel#formSectionHeader { color: #38bdf8; font-size: 13px; font-weight: bold; }
+        QLabel#summaryName { color: #cbd5e1; }
+        QLabel#totalValue { color: #f8fafc; font-weight: 500; }
+        QLabel#totalValueStrong { color: #38bdf8; font-weight: bold; }
+        QFrame#summaryPanel {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+        }
+        QSpinBox#fiscalYearSpin, QDoubleSpinBox#amountInput {
+            color: #f8fafc; background-color: #0f172a;
+            border: 1px solid #475569; border-radius: 6px; padding: 4px 8px;
+            selection-background-color: #0369a1;
+        }
+        QSpinBox#fiscalYearSpin:focus, QDoubleSpinBox#amountInput:focus {
+            border: 1px solid #38bdf8;
+        }
+        QTableWidget#balanceSheetTable {
+            color: #f8fafc; background-color: #1e293b;
+            border: 1px solid #475569; border-radius: 6px; padding: 6px;
+            selection-background-color: #0369a1;
+        }
+        QPushButton#dangerButton {
+            color: #fca5a5; background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            border-radius: 6px; padding: 10px; font-weight: bold;
+        }
+        QPushButton#dangerButton:hover { background-color: #dc2626; color: #ffffff; }
+        QLabel#balanceBadge { padding: 9px 12px; border-radius: 8px; font-weight: bold; }
+        QLabel#balanceBadge[state="success"] {
+            color: #22c55e; background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+        QLabel#balanceBadge[state="error"] {
+            color: #ef4444; background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
     )");
 }
 

@@ -130,5 +130,18 @@ return cashInBank;
 double Assets::getAccountsReceivable() const {
 return accountsReceivable;
 }
+double Assets::getLand() const { return land; }
+double Assets::getBuildings() const { return buildings; }
+double Assets::getMachinery() const { return machinery; }
+double Assets::getFurniture() const { return furniture; }
+double Assets::getVehicles() const { return vehicles; }
+double Assets::getInstallations() const { return installations; }
+double Assets::getRawMaterials() const { return rawMaterials; }
+double Assets::getWorkInProcess() const { return workInProcess; }
+double Assets::getFinishedGoods() const { return finishedGoods; }
+double Assets::getSpareParts() const { return spareParts; }
+double Assets::getSaleableWaste() const { return saleableWaste; }
+double Assets::getLongTermInvestments() const { return longTermInvestments; }
+double Assets::getExternalInvestments() const { return externalInvestments; }
 
 } // namespace corporate_planning::core

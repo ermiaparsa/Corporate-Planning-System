@@ -20,13 +20,9 @@ class BalanceSheet {
         Liabilities& getLiabilities();
         const Liabilities& getLiabilities() const;
 
-        void setNetWorth(double value);
-        double getNetWorth() const;
-
     private:
         Assets assets;
         Liabilities liabilities;
-        double netWorth;
 };
 
 } // namespace corporate_planning::core

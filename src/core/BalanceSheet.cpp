@@ -1,30 +1,26 @@
 #include "corporate_planning/core/BalanceSheet.hpp"
-#include <iostream>
-
-using namespace std;
 
 namespace corporate_planning::core {
 
 BalanceSheet::BalanceSheet()
     : assets(),
-      liabilities(),
-      netWorth(0.0) {
+      liabilities() {
 }
 
 double BalanceSheet::calculateTotalAssets() const {
-return assets.calculateTotal();
+    return assets.calculateTotal();
 }
 
 double BalanceSheet::calculateTotalLiabilities() const {
-return liabilities.calculateTotal();
+    return liabilities.calculateTotal();
 }
 
 double BalanceSheet::calculateEquity() const {
-return netWorth;
+    return calculateTotalAssets() - calculateTotalLiabilities();
 }
 
 Assets& BalanceSheet::getAssets() {
-return assets;
+    return assets;
 }
 
 const Assets& BalanceSheet::getAssets() const {
@@ -32,19 +28,11 @@ const Assets& BalanceSheet::getAssets() const {
 }
 
 Liabilities& BalanceSheet::getLiabilities() {
-return liabilities;
+    return liabilities;
 }
 
 const Liabilities& BalanceSheet::getLiabilities() const {
     return liabilities;
-}
-
-void BalanceSheet::setNetWorth(double value) {
-netWorth = value;
-}
-
-double BalanceSheet::getNetWorth() const {
-return netWorth;
 }
 
 } // namespace corporate_planning::core
