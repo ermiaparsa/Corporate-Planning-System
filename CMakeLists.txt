@@ -32,9 +32,11 @@ set(SOURCES
     src/core/OtherInfo.cpp
     src/core/ManufacturingCompany.cpp
     src/core/User.cpp
+    src/core/UserService.cpp
     src/core/Equation.cpp
     src/app/App.cpp
     src/gui/MainWindow.cpp
+    src/gui/UserManagementPage.cpp
 )
 add_executable(corporate_planning ${SOURCES})
 

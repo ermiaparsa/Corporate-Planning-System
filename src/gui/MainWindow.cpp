@@ -1,7 +1,11 @@
 #include "corporate_planning/gui/MainWindow.hpp"
+#include "corporate_planning/gui/UserManagementPage.hpp"
 
 #include <QApplication>
 #include <QFont>
+#include <QCheckBox>
+#include <QFormLayout>
+#include <QLineEdit>
 #include <QFrame>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -155,8 +159,8 @@ MainWindow::MainWindow(QWidget* parent)
     pageStack->addWidget(createPage("Template 8: Forecast Execution Engine", "Multi-Year Dynamic Simulation", "Run dynamic forward-looking simulations, solve system equations, and compute multi-scenario projections."));
     pageStack->addWidget(createPage("Template 9: Historical Data & Trend Reports", "Past Financial Performance Archive", "Review time-series historical records, longitudinal performance data, and multi-period financial tables."));
     pageStack->addWidget(createPage("Template 10: Forecasted Projections Display", "Future Projected Statements", "Visualize generated future balance sheets, projected income statements, cash flow estimates, and scenario bands."));
-    pageStack->addWidget(createPage("Template 11: User & Role Management", "Access Control & Audit Trail", "Configure access roles (Administrator, Financial Analyst, Auditor), user privileges, and track system logs."));
-    pageStack->addWidget(createPage("Template 12: Authentication & Security", "User Credentials & Session Management", "Manage user logins, session tokens, password hashing, and authentication policies."));
+    pageStack->addWidget(new UserManagementPage(userService, pageStack));
+    pageStack->addWidget(createAuthenticationPage());
 
     contentLayout->addWidget(pageStack, 1);
 
@@ -303,6 +307,21 @@ MainWindow::MainWindow(QWidget* parent)
             font-size: 14px;
             line-height: 1.5;
         }
+        QLabel#formLabel, QCheckBox#formCheck { color: #cbd5e1; }
+        QLineEdit#formInput, QComboBox#formCombo, QTableWidget#userTable {
+            color: #f8fafc; background-color: #1e293b;
+            border: 1px solid #475569; border-radius: 6px; padding: 6px;
+            selection-background-color: #0369a1;
+        }
+        QHeaderView::section { color: #cbd5e1; background: #334155; padding: 6px; }
+        QPushButton#primaryButton, QPushButton#secondaryButton {
+            color: #f8fafc; background: #0369a1; border: none;
+            border-radius: 6px; padding: 10px;
+        }
+        QPushButton#secondaryButton { background: #334155; }
+        QLabel#statusLabel { color: #cbd5e1; }
+        QLabel#statusLabel[state="error"] { color: #fca5a5; }
+        QLabel#statusLabel[state="success"] { color: #86efac; }
     )");
 }
 
@@ -322,9 +341,92 @@ void MainWindow::addNavButton(QVBoxLayout* layout, const QString& text, int page
     connect(button, &QPushButton::clicked, this, [this, text, pageIndex]() {
         pageTitleLabel->setText(text);
         pageStack->setCurrentIndex(pageIndex);
+        pageSubtitleLabel->setText(pageIndex == 11 ? "Create accounts and manage user roles"
+            : pageIndex == 12 ? "Sign in with a registered account"
+            : "Corporate Planning System");
     });
 
     layout->addWidget(button);
+}
+
+QWidget* MainWindow::createAuthenticationPage() {
+    auto* page = new QWidget(pageStack);
+    auto* layout = new QVBoxLayout(page);
+    auto* card = new QFrame(page);
+    card->setObjectName("pageCard");
+    auto* form = new QVBoxLayout(card);
+    form->setContentsMargins(28, 26, 28, 26);
+    form->setSpacing(14);
+    auto* title = new QLabel("Authentication / Login", card);
+    title->setObjectName("cardTitle");
+    form->addWidget(title);
+    auto* hint = new QLabel("Create an account in User Management first. Accounts are available for this app session.", card);
+    hint->setObjectName("cardDescription");
+    hint->setWordWrap(true);
+    form->addWidget(hint);
+    auto* username = new QLineEdit(card);
+    username->setObjectName("formInput");
+    username->setPlaceholderText("Username");
+    username->setAccessibleName("Username");
+    auto* password = new QLineEdit(card);
+    password->setObjectName("formInput");
+    password->setPlaceholderText("Password");
+    password->setAccessibleName("Password");
+    password->setEchoMode(QLineEdit::Password);
+    form->addWidget(username);
+    form->addWidget(password);
+    auto* showPassword = new QCheckBox("Show password", card);
+    showPassword->setObjectName("formCheck");
+    form->addWidget(showPassword);
+    connect(showPassword, &QCheckBox::toggled, password, [password](bool checked) {
+        password->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
+    });
+    auto* status = new QLabel("Not signed in", card);
+    status->setObjectName("statusLabel");
+    status->setWordWrap(true);
+    form->addWidget(status);
+    auto* login = new QPushButton("Sign In", card);
+    login->setObjectName("primaryButton");
+    auto* logout = new QPushButton("Sign Out", card);
+    logout->setObjectName("secondaryButton");
+    logout->hide();
+    form->addWidget(login);
+    form->addWidget(logout);
+    const auto signIn = [this, username, password, showPassword, status, login, logout]() {
+        const bool success = userService.login(username->text().toStdString(), password->text().toStdString());
+        password->clear();
+        showPassword->setChecked(false);
+        if (!success) {
+            status->setText("Invalid username or password.");
+            password->setFocus();
+            return;
+        }
+        const auto* user = userService.getCurrentUser();
+        status->setText(QString("Signed in as %1 (%2)")
+            .arg(QString::fromStdString(user->getUsername()),
+                 QString::fromStdString(core::UserService::roleToDisplayName(user->getRole()))));
+        username->setEnabled(false);
+        password->setEnabled(false);
+        login->hide();
+        logout->show();
+    };
+    connect(login, &QPushButton::clicked, this, signIn);
+    connect(username, &QLineEdit::returnPressed, this, signIn);
+    connect(password, &QLineEdit::returnPressed, this, signIn);
+    connect(logout, &QPushButton::clicked, this, [this, username, password, status, login, logout]() {
+        userService.logout();
+        username->clear();
+        password->clear();
+        username->setEnabled(true);
+        password->setEnabled(true);
+        status->setText("Signed out");
+        logout->hide();
+        login->show();
+        username->setFocus();
+    });
+    layout->addWidget(card);
+    layout->addStretch();
+    return page;
 }
 
 QWidget* MainWindow::createPage(
