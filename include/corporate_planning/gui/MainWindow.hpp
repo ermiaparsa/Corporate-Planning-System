@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "corporate_planning/core/BalanceSheetService.hpp"
+#include "corporate_planning/core/IncomeStatementService.hpp"
 #include "corporate_planning/core/UserService.hpp"
 
 class QLabel;
@@ -20,6 +21,7 @@ public:
 private:
     core::UserService userService;
     core::BalanceSheetService balanceSheetService;
+    core::IncomeStatementService incomeStatementService;
     QWidget* createAuthenticationPage();
     void addSectionHeader(QVBoxLayout* layout, const QString& title);
     void addNavButton(QVBoxLayout* layout, const QString& text, int pageIndex);

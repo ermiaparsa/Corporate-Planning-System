@@ -25,6 +25,8 @@ set(SOURCES
     src/core/BalanceSheet.cpp
     src/core/BalanceSheetRecord.cpp
     src/core/BalanceSheetService.cpp
+    src/core/IncomeStatementService.cpp
+    src/core/IncomeStatementRecord.cpp
     src/core/Assets.cpp
     src/core/Liabilities.cpp
     src/core/IncomeStatement.cpp
@@ -37,6 +39,7 @@ set(SOURCES
     src/core/UserService.cpp
     src/core/Equation.cpp
     src/app/App.cpp
+    src/gui/IncomeStatementPage.cpp
     src/gui/MainWindow.cpp
     src/gui/BalanceSheetPage.cpp
     src/gui/UserManagementPage.cpp
