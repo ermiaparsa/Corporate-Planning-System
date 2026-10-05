@@ -35,6 +35,8 @@ set(SOURCES
     src/core/PersonnelInfo.cpp
     src/core/OtherInfo.cpp
     src/core/ManufacturingCompany.cpp
+    src/core/ProductionLine.cpp
+    src/core/ProductionService.cpp
     src/core/User.cpp
     src/core/UserService.cpp
     src/core/Equation.cpp
@@ -42,6 +44,7 @@ set(SOURCES
     src/gui/IncomeStatementPage.cpp
     src/gui/MainWindow.cpp
     src/gui/BalanceSheetPage.cpp
+    src/gui/ProductionLinePage.cpp
     src/gui/UserManagementPage.cpp
 )
 add_executable(corporate_planning ${SOURCES})

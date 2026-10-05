@@ -1,6 +1,7 @@
 #include "corporate_planning/gui/MainWindow.hpp"
 #include "corporate_planning/gui/BalanceSheetPage.hpp"
 #include "corporate_planning/gui/IncomeStatementPage.hpp"
+#include "corporate_planning/gui/ProductionLinePage.hpp"
 #include "corporate_planning/gui/UserManagementPage.hpp"
 
 #include <QApplication>
@@ -153,7 +154,7 @@ MainWindow::MainWindow(QWidget* parent)
     pageStack->addWidget(createPage("Dashboard Overview", "System Status & Summary", "Comprehensive snapshot of core enterprise indicators, operational outputs, and forecasting status."));
     pageStack->addWidget(new BalanceSheetPage(balanceSheetService, pageStack));
     pageStack->addWidget(new IncomeStatementPage(incomeStatementService, pageStack));
-    pageStack->addWidget(createPage("Production Lines Configuration", "Capacity & Unit Economics", "Define nominal vs. actual capacities, per-unit manufacturing costs, product lines, and operational efficiencies."));
+    pageStack->addWidget(new ProductionLinePage(productionService, pageStack));
     pageStack->addWidget(createPage("Personnel, FX & Macro Auxiliaries", "Workforce & Macro Indicators", "Maintain headcount, wage structures, inflation rates, and foreign exchange (FX) market parameters."));
     pageStack->addWidget(createPage("Financial Ratios Generation", "Ratio Analysis & Benchmark Indicators", "Automated computation and trend monitoring of Liquidity, Solvency, Turnover, and Profitability (ROA, ROE, ROS)."));
     pageStack->addWidget(createPage("Exogenous Variables Definition", "External Economic Drivers", "Configure macro external parameters that are outside firm control (e.g., market growth, commodity prices, tariffs)."));
@@ -382,7 +383,11 @@ void MainWindow::addNavButton(QVBoxLayout* layout, const QString& text, int page
     connect(button, &QPushButton::clicked, this, [this, text, pageIndex]() {
         pageTitleLabel->setText(text);
         pageStack->setCurrentIndex(pageIndex);
-        pageSubtitleLabel->setText(pageIndex == 11 ? "Create accounts and manage user roles"
+        pageSubtitleLabel->setText(
+            pageIndex == 1 ? "Historical Baseline Balance Sheet Data"
+            : pageIndex == 2 ? "Historical P&L Income Statement Data"
+            : pageIndex == 3 ? "Historical 10-Year Operational & Capacity Records"
+            : pageIndex == 11 ? "Create accounts and manage user roles"
             : pageIndex == 12 ? "Sign in with a registered account"
             : "Corporate Planning System");
     });
